@@ -56,3 +56,70 @@ class MorseCryptorApp(tk.Tk):
 
         self.enc_button = ttk.Button(self.encryption_frame, text="Encrypt", command=self.encrypt_text)
         self.enc_button.pack(pady=10)
+    
+    def create_decryption_page(self):
+        # Decryption widgets
+        self.dec_input_label = ttk.Label(self.decryption_frame, text="Enter text to decrypt:")
+        self.dec_input_label.pack(pady=10)
+        self.dec_input_text = tk.Text(self.decryption_frame, height=5, width=40)
+        self.dec_input_text.pack(padx=10)
+
+        self.dec_output_label = ttk.Label(self.decryption_frame, text="OUTPUT:")
+        self.dec_output_label.pack(pady=10)
+        self.dec_output_text = tk.Text(self.decryption_frame, height=5, width=40, state="disabled")
+        self.dec_output_text.pack(padx=10)
+
+        self.dec_button = ttk.Button(self.decryption_frame, text="Decrypt", command=self.decrypt_text)
+        self.dec_button.pack(pady=10)
+
+    def encrypt_text(self):
+        input_text = self.enc_input_text.get("1.0", "end-1c")
+        encrypted_text = self.encrypt(input_text)
+        self.enc_output_text.config(state="normal")
+        self.enc_output_text.delete("1.0", tk.END)
+        self.enc_output_text.insert("1.0", encrypted_text)
+        self.enc_output_text.config(state="disabled")
+
+    def decrypt_text(self):
+        input_text = self.dec_input_text.get("1.0", "end-1c")
+        decrypted_text = self.decrypt(input_text)
+        self.dec_output_text.config(state="normal")
+        self.dec_output_text.delete("1.0", tk.END)
+        self.dec_output_text.insert("1.0", decrypted_text)
+        self.dec_output_text.config(state="disabled")
+
+    def encrypt(self, text):
+        encrypted_text = ""
+        for char in text:
+            if char in morse_code_uppercase:
+                morse_char = morse_code_uppercase[char]
+                encrypted_text += morse_char.replace('.', 'a').replace('-', 'b') + ' '
+            elif char in morse_code_lowercase:
+                morse_char = morse_code_lowercase[char]
+                encrypted_text += morse_char.replace('.', 'A').replace('-', 'B') + ' '
+            else:
+                encrypted_text += char + ' '
+        return encrypted_text.strip()
+
+    def decrypt(self, encrypted_text):
+        words = encrypted_text.split(' / ')
+        decrypted_text = ""
+        for word in words:
+            chars = word.split()
+            for char in chars:
+                if 'a' in char or 'b' in char:
+                    morse_char = char.replace('a', '.').replace('b', '-')
+                    decrypted_text += reverse_morse_code_dict[morse_char].upper()
+                elif 'A' in char or 'B' in char:
+                    morse_char = char.replace('A', '.').replace('B', '-')
+                    decrypted_text += reverse_morse_code_dict[morse_char].lower()
+                else:
+                    decrypted_text += char
+            decrypted_text += ' '
+        return decrypted_text.strip()
+
+if __name__ == "__main__":
+    app = MorseCryptorApp()
+    app.mainloop()
+
+
