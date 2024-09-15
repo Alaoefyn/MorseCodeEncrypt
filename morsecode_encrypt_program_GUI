@@ -1,0 +1,58 @@
+import tkinter as tk
+from tkinter import ttk
+
+# Morse code dictionaries
+morse_code_uppercase = {
+    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
+    'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
+    'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+    'Y': '-.--', 'Z': '--..', '!': '-.-.--', '?': '..--..', '*': '-..-', '_': '..--.-', '>': '.-.-.',
+    '<': '-....-', '.': '.-.-.-'
+}
+
+morse_code_lowercase = {
+    'a': '.-', 'b': '-...', 'c': '-.-.', 'd': '-..', 'e': '.', 'f': '..-.', 'g': '--.', 'h': '....',
+    'i': '..', 'j': '.---', 'k': '-.-', 'l': '.-..', 'm': '--', 'n': '-.', 'o': '---', 'p': '.--.',
+    'q': '--.-', 'r': '.-.', 's': '...', 't': '-', 'u': '..-', 'v': '...-', 'w': '.--', 'x': '-..-',
+    'y': '-.--', 'z': '--..', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
+    '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----', ' ': '/'
+}
+
+# Reverse Morse code dictionary for decryption
+reverse_morse_code_dict = {**{value: key for key, value in morse_code_uppercase.items()},
+                           **{value: key for key, value in morse_code_lowercase.items()}}
+
+class MorseCryptorApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Morse Cryptor")
+        self.geometry("400x300")
+
+        # Create notebook (tabbed interface)
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+
+        # Create encryption page
+        self.encryption_frame = ttk.Frame(self.notebook)
+        self.notebook.add(self.encryption_frame, text="Encryption")
+        self.create_encryption_page()
+
+        # Create decryption page
+        self.decryption_frame = ttk.Frame(self.notebook)
+        self.notebook.add(self.decryption_frame, text="Decryption")
+        self.create_decryption_page()
+
+    def create_encryption_page(self):
+        # Encryption widgets
+        self.enc_input_label = ttk.Label(self.encryption_frame, text="Enter text to encrypt:")
+        self.enc_input_label.pack(pady=10)
+        self.enc_input_text = tk.Text(self.encryption_frame, height=5, width=40)
+        self.enc_input_text.pack(padx=10)
+
+        self.enc_output_label = ttk.Label(self.encryption_frame, text="OUTPUT:")
+        self.enc_output_label.pack(pady=10)
+        self.enc_output_text = tk.Text(self.encryption_frame, height=5, width=40, state="disabled")
+        self.enc_output_text.pack(padx=10)
+
+        self.enc_button = ttk.Button(self.encryption_frame, text="Encrypt", command=self.encrypt_text)
+        self.enc_button.pack(pady=10)
