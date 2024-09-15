@@ -1,0 +1,77 @@
+# Morse code dictionary for uppercase letters
+morse_code_uppercase = {
+    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
+    'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.',
+    'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+    'Y': '-.--', 'Z': '--..', '!': '-.-.--', '?': '..--..', '*': '-..-', '_': '..--.-', '>': '.-.-.',
+    '<': '-....-', '.': '.-.-.-'
+}
+
+# Morse code dictionary for lowercase letters
+morse_code_lowercase = {
+    'a': '.-', 'b': '-...', 'c': '-.-.', 'd': '-..', 'e': '.', 'f': '..-.', 'g': '--.', 'h': '....',
+    'i': '..', 'j': '.---', 'k': '-.-', 'l': '.-..', 'm': '--', 'n': '-.', 'o': '---', 'p': '.--.',
+    'q': '--.-', 'r': '.-.', 's': '...', 't': '-', 'u': '..-', 'v': '...-', 'w': '.--', 'x': '-..-',
+    'y': '-.--', 'z': '--..', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
+    '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----', ' ': '/'
+}
+
+# Combined Morse code dictionary for reverse lookup
+morse_code_combined = {**morse_code_uppercase, **morse_code_lowercase}
+
+# Reverse Morse code dictionary for decryption
+reverse_morse_code_dict = {value: key for key, value in morse_code_combined.items()}
+
+# Function to encrypt text to Morse code and then to custom "a/b" or "A/B" format
+def encrypt(text):
+    encrypted_text = ""
+    for char in text:
+        if char in morse_code_uppercase:
+            morse_char = morse_code_uppercase[char]
+            encrypted_text += morse_char.replace('.', 'a').replace('-', 'b') + ' '
+        elif char in morse_code_lowercase:
+            morse_char = morse_code_lowercase[char]
+            encrypted_text += morse_char.replace('.', 'A').replace('-', 'B') + ' '
+        else:
+            encrypted_text += char + ' '
+    return encrypted_text.strip()
+
+# Function to decrypt custom "a/b" or "A/B" format back to text
+def decrypt(encrypted_text):
+    words = encrypted_text.split(' / ')
+    decrypted_text = ""
+    for word in words:
+        chars = word.split()
+        for char in chars:
+            if 'a' in char or 'b' in char:
+                morse_char = char.replace('a', '.').replace('b', '-')
+                decrypted_text += reverse_morse_code_dict[morse_char].upper()
+            elif 'A' in char or 'B' in char:
+                morse_char = char.replace('A', '.').replace('B', '-')
+                decrypted_text += reverse_morse_code_dict[morse_char].lower()
+            else:
+                decrypted_text += char
+        decrypted_text += ' '
+    return decrypted_text.strip()
+
+# Main function to take user input and perform encryption or decryption
+def main():
+    while True:
+        choice = input("Do you want to (e)ncrypt or (d)ecrypt a message? (e/d): ").lower()
+        if choice == 'e':
+            original_text = input("Enter the text to encrypt: ")
+            encrypted_text = encrypt(original_text)
+            print(f"Encrypted text: {encrypted_text}")
+        elif choice == 'd':
+            encrypted_text = input("Enter the text to decrypt: ")
+            decrypted_text = decrypt(encrypted_text)
+            print(f"Decrypted text: {decrypted_text}")
+        else:
+            print("Invalid choice. Please enter 'e' to encrypt or 'd' to decrypt.")
+
+        continue_choice = input("Do you want to perform another operation? (yes/no): ").lower()
+        if continue_choice != 'yes':
+            break
+
+if __name__ == "__main__":
+    main()
